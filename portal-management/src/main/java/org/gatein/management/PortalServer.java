@@ -25,18 +25,13 @@ package org.gatein.management;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.portal.application.PortalStatisticService;
 import org.gatein.pc.api.Portlet;
 import org.gatein.pc.federation.FederatedPortletInvoker;
 import org.gatein.pc.federation.FederatingPortletInvoker;
 import org.gatein.pc.management.LocalPortletManagement;
 import org.gatein.pc.management.LocalPortletManagementMBean;
 import org.gatein.pc.management.PortletContainerManagementInterceptorImpl;
-import org.jboss.mx.util.MBeanProxy;
-import org.jboss.mx.util.MBeanServerLocator;
 
-import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.util.ArrayList;
@@ -45,8 +40,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+//import org.jboss.mx.util.MBeanProxy;
 
 /**
  * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>
@@ -57,7 +53,7 @@ public class PortalServer
    private static final Log log = LogFactory.getLog(PortalServer.class);
 
    private static Map<Portal.PortalKey, Portal> portals = new ConcurrentHashMap<Portal.PortalKey, Portal>();
-   private static MBeanServer server = MBeanServerLocator.locateJBoss();
+
    private static final PortletContainerManagementInterceptorImpl interceptor = new PortletContainerManagementInterceptorImpl();
    public static final String PORTLET_JMX_PREFIX = "gatein.management:service=management,type=portlet,name=";
 
@@ -65,45 +61,10 @@ public class PortalServer
    {
    }
 
-   /*static
-   {
-      try
-      {
-         Set<ObjectName> objectNames = server.queryNames(createObjectName("exo:container=portal,name=*,portal=*"), null);
-         for (ObjectName objectName : objectNames)
-         {
-            PortalContainer container = getMBeanProxy(PortalContainer.class, objectName, server);
-            String portalContainerName = objectName.getKeyProperty("portal");
-
-            PortalStatisticService statisticService = (PortalStatisticService)container.getComponentInstanceOfType(PortalStatisticService.class);
-            String[] portalNames = statisticService.getPortalList();
-
-            // Retrieve the portlet invoker to access portlet and add the statistics interceptor
-            FederatingPortletInvoker invoker = (FederatingPortletInvoker)container.getComponentInstanceOfType(FederatingPortletInvoker.class);
-
-
-            for (String portalName : portalNames)
-            {
-               Portal.PortalKey portalKey = new Portal.PortalKey(portalContainerName, portalName);
-               Portal portal = new PortalImpl(portalKey);
-               portal.setPortalStatisticService(statisticService);
-               portal.setInvoker(invoker);
-               portals.put(portalKey, portal);
-            }
-         }
-      }
-      catch (Exception e)
-      {
-         log.info("Failed to start PortalServer: " + e.getLocalizedMessage(), e);
-      }
-   }*/
-
-   public static Portal createAndAddPortal(final String portalContainerName, final String portalName, final PortalStatisticService portalStatisticService, final FederatingPortletInvoker federatingPortletInvoker)
+   public static Portal createAndAddPortal(final String portalContainerName, final String portalName, final PortalStatisticService portalStatisticService)
    {
       Portal.PortalKey portalKey = new Portal.PortalKey(portalContainerName, portalName);
-      Portal portal = new PortalImpl(portalKey);
-      portal.setPortalStatisticService(portalStatisticService);
-      portal.setInvoker(federatingPortletInvoker);
+      Portal portal = new PortalImpl(portalKey, portalStatisticService);
       portals.put(portalKey, portal);
       return portal;
    }
@@ -133,7 +94,7 @@ public class PortalServer
       // attempt to register MBean with server
       try
       {
-         server.registerMBean(management, getMBeanName(portletId));
+//         server.registerMBean(management, getMBeanName(portletId));
 
          log.debug("Registered Management MBean for: " + portletId);
       }
@@ -149,7 +110,7 @@ public class PortalServer
    {
       try
       {
-         server.unregisterMBean(getMBeanName(portlet));
+//         server.unregisterMBean(getMBeanName(portlet));
       }
       catch (Exception e)
       {
@@ -195,7 +156,7 @@ public class PortalServer
     * @return a MBeanProxy for the specified MBean if it exists
     * @throws RuntimeException if the MBean couldn't be retrieved
     */
-   private static <T> T getMBeanProxy(Class<T> expectedClass, ObjectName name, MBeanServer server)
+   /*private static <T> T getMBeanProxy(Class<T> expectedClass, ObjectName name, MBeanServer server)
    {
       try
       {
@@ -207,8 +168,7 @@ public class PortalServer
          log.error(message, e);
          throw new RuntimeException(message, e);
       }
-   }
-
+   }*/
    public static List<Portal> getPortals()
    {
       ArrayList<Portal> portalList = new ArrayList<Portal>(portals.values());

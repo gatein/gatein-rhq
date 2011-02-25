@@ -23,9 +23,6 @@
 
 package org.gatein.management;
 
-import org.exoplatform.portal.application.PortalStatisticService;
-import org.gatein.pc.federation.FederatingPortletInvoker;
-
 import java.util.Map;
 
 /**
@@ -37,15 +34,14 @@ public interface Portal extends Comparable<Portal>
    public PortalKey getKey();
 
    public double getThroughput();
+
    public double getMinExecutionTime();
+
    public double getMaxExecutionTime();
+
    public double getAverageExecutionTime();
 
    Map<String, ManagedPortletInvoker> getManagedPortletInvokers();
-
-   void setPortalStatisticService(PortalStatisticService statisticService);
-
-   void setInvoker(FederatingPortletInvoker invoker);
 
    static class PortalKey implements Comparable<PortalKey>
    {

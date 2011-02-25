@@ -96,7 +96,7 @@
          <artifactId>rhq-jmx-plugin</artifactId>
          <version>${rhq.version}</version>
       </dependency>
-      <dependency>
+      <!--<dependency>
          <groupId>org.exoplatform.portal</groupId>
          <artifactId>exo.portal.webui.portal</artifactId>
          <version>3.1.0-GA</version>
@@ -105,7 +105,7 @@
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
          <version>2.2.2-GA</version>
-      </dependency>
+      </dependency>-->
       <dependency>
          <groupId>org.gatein.pc</groupId>
          <artifactId>pc-federation</artifactId>
@@ -156,6 +156,11 @@
                            <version>${project.version}</version>
                         </artifactItem>
                         <artifactItem>
+                           <groupId>org.gatein.common</groupId>
+                           <artifactId>common-common</artifactId>
+                           <version>2.0.3-GA</version>
+                        </artifactItem>
+                        <artifactItem>
                            <groupId>org.gatein.pc</groupId>
                            <artifactId>pc-management</artifactId>
                            <version>${gatein.pc.version}</version>
@@ -171,6 +176,11 @@
                            <version>${gatein.pc.version}</version>
                         </artifactItem>
                         <artifactItem>
+                           <groupId>org.gatein.pc</groupId>
+                           <artifactId>pc-portlet</artifactId>
+                           <version>${gatein.pc.version}</version>
+                        </artifactItem>
+                        <!--<artifactItem>
                            <groupId>org.exoplatform.kernel</groupId>
                            <artifactId>exo.kernel.container</artifactId>
                            <version>2.2.2-GA</version>
@@ -184,7 +194,7 @@
                            <groupId>picocontainer</groupId>
                            <artifactId>picocontainer</artifactId>
                            <version>1.1</version>
-                        </artifactItem>
+                        </artifactItem>-->
                      </artifactItems>
                      <outputDirectory>${project.build.outputDirectory}/lib</outputDirectory>
                   </configuration>

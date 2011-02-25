@@ -24,11 +24,9 @@
 package org.gatein.management;
 
 
-import org.exoplatform.portal.application.PortalStatisticService;
-import org.gatein.pc.federation.FederatingPortletInvoker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.gatein.common.util.ParameterValidation;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -39,11 +37,14 @@ public class PortalImpl implements Portal
 {
    private PortalKey key;
    private PortalStatisticService statisticService;
-   private FederatingPortletInvoker invoker;
 
-   public PortalImpl(PortalKey key)
+   public PortalImpl(PortalKey key, PortalStatisticService statisticService)
    {
+      ParameterValidation.throwIllegalArgExceptionIfNull(key, "PortalKey");
+      ParameterValidation.throwIllegalArgExceptionIfNull(statisticService, "PortalStatisticService");
+
       this.key = key;
+      this.statisticService = statisticService;
    }
 
    public PortalKey getKey()
@@ -58,37 +59,28 @@ public class PortalImpl implements Portal
 
    public double getThroughput()
    {
-      return statisticService.getThroughput(getPortalName());
+      return statisticService.getThroughput();
    }
 
    public double getMinExecutionTime()
    {
-      return statisticService.getMinTime(getPortalName());
+      return statisticService.getMinExecutionTime();
    }
 
    public double getMaxExecutionTime()
    {
-      return statisticService.getMaxTime(getPortalName());
+      return statisticService.getMaxExecutionTime();
    }
 
    public double getAverageExecutionTime()
    {
-      return statisticService.getAverageTime(getPortalName());
+      return statisticService.getAverageExecutionTime();
    }
 
    public Map<String, ManagedPortletInvoker> getManagedPortletInvokers()
    {
-      return PortalServer.getManagedPortletInvokersFor(invoker);
-   }
-
-   public void setPortalStatisticService(PortalStatisticService statisticService)
-   {
-      this.statisticService = statisticService;
-   }
-
-   public void setInvoker(FederatingPortletInvoker invoker)
-   {
-      this.invoker = invoker;
+//      return PortalServer.getManagedPortletInvokersFor(invoker);
+      return Collections.emptyMap();
    }
 
    public int compareTo(Portal o)

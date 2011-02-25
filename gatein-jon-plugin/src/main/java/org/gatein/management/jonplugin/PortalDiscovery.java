@@ -23,33 +23,22 @@
 
 package org.gatein.management.jonplugin;
 
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.portal.application.PortalStatisticService;
 import org.gatein.management.Portal;
 import org.gatein.management.PortalServer;
-import org.gatein.pc.federation.FederatingPortletInvoker;
+import org.gatein.management.PortalStatisticService;
+import org.gatein.management.jmx.JMXPortalStatisticService;
 import org.mc4j.ems.connection.EmsConnection;
 import org.mc4j.ems.connection.bean.EmsBean;
 import org.rhq.core.pluginapi.inventory.DiscoveredResourceDetails;
-import org.rhq.core.pluginapi.inventory.InvalidPluginConfigurationException;
-import org.rhq.core.pluginapi.inventory.ResourceComponent;
-import org.rhq.core.pluginapi.inventory.ResourceDiscoveryComponent;
 import org.rhq.core.pluginapi.inventory.ResourceDiscoveryContext;
 import org.rhq.plugins.jmx.JMXComponent;
 import org.rhq.plugins.jmx.MBeanResourceDiscoveryComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
-import javax.management.ObjectName;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
-/** Discovery class */
-//public class PortalDiscovery implements ResourceDiscoveryComponent
 public class PortalDiscovery extends MBeanResourceDiscoveryComponent<JMXComponent>
 {
    private static final Logger log = LoggerFactory.getLogger(PortalDiscovery.class);
@@ -65,101 +54,23 @@ public class PortalDiscovery extends MBeanResourceDiscoveryComponent<JMXComponen
       {
          String resourceKey = resource.getResourceKey();
          EmsBean portalBean = connection.getBean(resourceKey);
-         String portalContainerName = (String)portalBean.getAttribute("portal").getValue();
-         /*PortalContainer container = portalBean.getProxy(PortalContainer.class);
+         String portalContainerName = portalBean.getBeanName().getKeyProperty("portal").replace('"', ' ').trim();
 
-         FederatingPortletInvoker invoker = (FederatingPortletInvoker)container.getComponentInstanceOfType(FederatingPortletInvoker.class);
-
-         PortalStatisticService statisticService = (PortalStatisticService)container.getComponentInstanceOfType(PortalStatisticService.class);
-         String[] portalNames = statisticService.getPortalList();
-
+         String[] portalNames = (String[])portalBean.getAttribute("PortalList").getValue();
          for (String portalName : portalNames)
          {
-            Portal portal = PortalServer.createAndAddPortal(portalContainerName, portalName, statisticService, invoker);
+            PortalStatisticService statisticService = new JMXPortalStatisticService(portalBean, portalName);
+            Portal portal = PortalServer.createAndAddPortal(portalContainerName, portalName, statisticService);
             Portal.PortalKey key = portal.getKey();
             DiscoveredResourceDetails detail = new DiscoveredResourceDetails(context.getResourceType(), ResourceKey.createPortalKeyFrom(key),
                key.getPortalName(), "version", "Monitoring of GateIn resources", null, null);
 
             resources.add(detail);
             log.info("Discovered new Portal");
-         }*/
+         }
 
       }
 
       return resources;
    }
-
-   /*@Override
-   public Set<DiscoveredResourceDetails> discoverResources(ResourceDiscoveryContext context) throws InvalidPluginConfigurationException, Exception
-   {
-      Set<DiscoveredResourceDetails> discoveredResources = new HashSet<DiscoveredResourceDetails>();
-
-      List<Portal> portals = PortalServer.getPortals();
-      for (Portal portal : portals)
-      {
-
-         Portal.PortalKey key = portal.getKey();
-         DiscoveredResourceDetails detail = new DiscoveredResourceDetails(context.getResourceType(), ResourceKey.createPortalKeyFrom(key),
-            key.getPortalName(), "version", "Monitoring of GateIn resources", null, null);
-
-         discoveredResources.add(detail);
-         log.info("Discovered new Portal");
-      }
-
-      return discoveredResources;
-   }*/
-
-   /*try
-   {
-      Set<ObjectName> objectNames = jboss.queryNames(createObjectName("exo:container=portal,name=*,portal=*"), null);
-      for (ObjectName objectName : objectNames)
-      {
-         PortalContainer container = getMBeanProxy(PortalContainer.class, objectName, server);
-         String portalContainerName = objectName.getKeyProperty("portal");
-
-         PortalStatisticService statisticService = (PortalStatisticService)container.getComponentInstanceOfType(PortalStatisticService.class);
-         String[] portalNames = statisticService.getPortalList();
-
-         // Retrieve the portlet invoker to access portlet and add the statistics interceptor
-         FederatingPortletInvoker invoker = (FederatingPortletInvoker)container.getComponentInstanceOfType(FederatingPortletInvoker.class);
-
-
-         for (String portalName : portalNames)
-         {
-            Portal.PortalKey portalKey = new Portal.PortalKey(portalContainerName, portalName);
-            Portal portal = new PortalImpl(portalKey);
-            portal.setPortalStatisticService(statisticService);
-            portal.setInvoker(invoker);
-            portals.put(portalKey, portal);
-         }
-      }
-   }
-   catch (Exception e)
-   {
-      log.info("Failed to start PortalServer: " + e.getLocalizedMessage(), e);
-   }*/
-
-
-      /*Set<DiscoveredResourceDetails> discoveredResources = new HashSet<DiscoveredResourceDetails>();
-
-      List<Portal> portals = PortalServer.getPortals();
-      for (Portal portal : portals)
-      {
-
-         *//**
-          * A discovered resource must have a unique key, that must
-          * stay the same when the resource is discovered the next
-          * time
-          *//*
-         Portal.PortalKey key = portal.getKey();
-         DiscoveredResourceDetails detail = new DiscoveredResourceDetails(context.getResourceType(), ResourceKey.createPortalKeyFrom(key),
-            key.getPortalName(), "version", "Monitoring of GateIn resources", null, null);
-
-         discoveredResources.add(detail);
-         log.info("Discovered new Portal");
-      }
-
-      return discoveredResources;
-      }
-      */
 }
