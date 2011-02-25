@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ JBoss, a division of Red Hat                                              ~
+  ~ Copyright 2009, Red Hat Middleware, LLC, and individual                    
+  ~ contributors as indicated by the @authors tag. See the                     
+  ~ copyright.txt in the distribution for a full listing of                    
+  ~ individual contributors.                                                   
+  ~                                                                            
+  ~ This is free software; you can redistribute it and/or modify it            
+  ~ under the terms of the GNU Lesser General Public License as                
+  ~ published by the Free Software Foundation; either version 2.1 of           
+  ~ the License, or (at your option) any later version.                        
+  ~                                                                            
+  ~ This software is distributed in the hope that it will be useful,           
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of             
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU           
+  ~ Lesser General Public License for more details.                            
+  ~                                                                            
+  ~ You should have received a copy of the GNU Lesser General Public           
+  ~ License along with this software; if not, write to the Free                
+  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA         
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.                  ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<plugin name="GateIn"
+        displayName="GateIn Plugin"
+        description="Supports monitoring of GateIn 3.1.x and EPP 5.1.x JMX"
+        version="2"
+        package="org.gatein.management.jonplugin"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:xmlns:rhq-plugin"
+        xmlns:c="urn:xmlns:rhq-configuration"
+        xsi:schemaLocation="urn:xmlns:rhq-plugin http://svn.rhq-project.org/repos/rhq/tags/RHQ_1_3_1_GA/modules/core/client-api/src/main/resources/rhq-plugin.xsd">
+
+   <depends plugin="JMX" />
+   <depends plugin="JBossAS5" useClasses="true"/>
+
+   <service name="GateIn Portal" discovery="org.gatein.management.jonplugin.PortalDiscovery"
+            class="org.gatein.management.jonplugin.PortalComponent" description="Monitors Portals">
+
+      <runs-inside>
+         <parent-resource-type name="JBossAS Server" plugin="JBossAS5"/>
+      </runs-inside>
+
+      <plugin-configuration>
+         <c:simple-property name="objectName" readOnly="true" default="exo:portal=%container%,service=statistic,type=portal,view=portal"/>
+      </plugin-configuration>
+
+      <metric property="minExecutionTime" displayName="Minimum execution time in seconds for this portal" units="seconds"/>
+      <metric property="maxExecutionTime" displayName="Maximum execution time in seconds for this portal" units="seconds"/>
+      <metric property="averageExecutionTime" displayName="Average execution time in seconds for this portal" units="seconds"/>
+      <metric property="throughput" displayName="Number of requests per second for this portal" units="none"/>
+
+      <service name="Portlet Invoker" class="InvokerComponent" discovery="InvokerDiscovery" description="Monitors PortletInvokers">
+         <operation name="refreshPortletList" displayName="Refresh portlet list"
+                    description="Refreshes the list of deployed portlets"/>
+
+
+         <service name="Portlet" class="PortletComponent" discovery="PortletDiscovery" description="Monitors Portlets">
+            <metric property="averageRenderTime" displayName="Average render time" units="milliseconds"/>
+            <metric property="averageActionTime" displayName="Average action time" units="milliseconds"/>
+            <metric property="maxRenderTime" displayName="Maximum render time" units="milliseconds"/>
+            <metric property="maxActionTime" displayName="Maximum action time" units="milliseconds"/>
+            <metric property="renderRequestCount" displayName="Number of render requests" measurementType="trendsup"
+                    units="none"/>
+            <metric property="actionRequestCount" displayName="Number of action requests" measurementType="trendsup"
+                    units="none"/>
+            <metric property="renderErrorCount" displayName="Number of render errors" measurementType="trendsup"
+                    units="none"/>
+            <metric property="actionErrorCount" displayName="Number of action errors" measurementType="trendsup"
+                    units="none"/>
+         </service>
+      </service>
+   </service>
+</plugin>

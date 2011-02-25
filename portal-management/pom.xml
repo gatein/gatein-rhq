@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+   <groupId>org.gatein.management</groupId>
+      <artifactId>jonplugin-parent</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <artifactId>portal-management</artifactId>
+   <packaging>jar</packaging>
+   <name>GateIn JON Plugin: Portal Management</name>
+
+   <dependencies>
+      <!--<dependency>
+         <groupId>org.jboss.portal.core</groupId>
+         <artifactId>core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.portal.core</groupId>
+         <artifactId>jems</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.portal.core</groupId>
+         <artifactId>server</artifactId>
+      </dependency>-->
+      <dependency>
+         <groupId>org.gatein.pc</groupId>
+         <artifactId>pc-management</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.gatein.pc</groupId>
+         <artifactId>pc-federation</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.jbossas</groupId>
+         <artifactId>jboss-as-j2se</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.portal</groupId>
+         <artifactId>exo.portal.webui.portal</artifactId>
+         <version>3.1.0-GA</version>
+         <scope>provided</scope>
+      </dependency>
+   </dependencies>
+
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>jboss-packaging-maven-plugin</artifactId>
+            <version>2.0-beta-1</version>
+
+            <!-- Enable packaging types and lifecycle bindings. -->
+            <extensions>true</extensions>
+            <configuration>
+               <excludeAll>true</excludeAll>
+               <primaryArtifact>false</primaryArtifact>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+
+</project>
