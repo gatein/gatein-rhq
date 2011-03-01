@@ -23,32 +23,68 @@
 
 package org.gatein.management;
 
-import java.util.Map;
+import org.gatein.common.util.ParameterValidation;
 
 /**
  * @author Chris Laprun
  * @version $Revision: 8784 $
  */
-public interface Portal extends Comparable<Portal>
+public class Portal implements Comparable<Portal>
 {
-   public PortalKey getKey();
+   private PortalKey key;
+   private PortalStatisticService statisticService;
 
-   public double getThroughput();
-
-   public double getMinExecutionTime();
-
-   public double getMaxExecutionTime();
-
-   public double getAverageExecutionTime();
-
-   Map<String, ManagedPortletInvoker> getManagedPortletInvokers();
-
-   static class PortalKey implements Comparable<PortalKey>
+   public Portal(PortalKey key, PortalStatisticService statisticService)
    {
+      ParameterValidation.throwIllegalArgExceptionIfNull(key, "PortalKey");
+      ParameterValidation.throwIllegalArgExceptionIfNull(statisticService, "PortalStatisticService");
+
+      this.key = key;
+      this.statisticService = statisticService;
+   }
+
+   public PortalKey getKey()
+   {
+      return key;
+   }
+
+   private String getPortalName()
+   {
+      return key.getPortalName();
+   }
+
+   public double getThroughput()
+   {
+      return statisticService.getThroughput();
+   }
+
+   public double getMinExecutionTime()
+   {
+      return statisticService.getMinExecutionTime();
+   }
+
+   public double getMaxExecutionTime()
+   {
+      return statisticService.getMaxExecutionTime();
+   }
+
+   public double getAverageExecutionTime()
+   {
+      return statisticService.getAverageExecutionTime();
+   }
+
+   public int compareTo(Portal o)
+   {
+      return key.compareTo(o.getKey());
+   }
+
+   public static class PortalKey implements Comparable<PortalKey>
+   {
+      private static final String SEPARATOR = "@";
       private final String portalName;
       private final String portalContainerName;
 
-      public PortalKey(String portalContainerName, String portalName)
+      private PortalKey(String portalContainerName, String portalName)
       {
          this.portalName = portalName;
          this.portalContainerName = portalContainerName;
@@ -82,13 +118,13 @@ public interface Portal extends Comparable<Portal>
 
       public static PortalKey parse(String compositeName)
       {
-         String[] split = compositeName.split(":");
+         String[] split = compositeName.split(SEPARATOR);
          return new PortalKey(split[0], split[1]);
       }
 
       public static String compose(PortalKey key)
       {
-         return key.getPortalContainerName() + ":" + key.getPortalName();
+         return key.getPortalContainerName() + SEPARATOR + key.getPortalName();
       }
 
       public int compareTo(PortalKey o)
@@ -104,6 +140,11 @@ public interface Portal extends Comparable<Portal>
       public String getPortalContainerName()
       {
          return portalContainerName;
+      }
+
+      public static PortalKey create(String portalContainerName, String portalName)
+      {
+         return new PortalKey(portalContainerName, portalName);
       }
    }
 }

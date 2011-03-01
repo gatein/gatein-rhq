@@ -160,41 +160,6 @@
                            <artifactId>common-common</artifactId>
                            <version>2.0.3-GA</version>
                         </artifactItem>
-                        <artifactItem>
-                           <groupId>org.gatein.pc</groupId>
-                           <artifactId>pc-management</artifactId>
-                           <version>${gatein.pc.version}</version>
-                        </artifactItem>
-                        <artifactItem>
-                           <groupId>org.gatein.pc</groupId>
-                           <artifactId>pc-federation</artifactId>
-                           <version>${gatein.pc.version}</version>
-                        </artifactItem>
-                        <artifactItem>
-                           <groupId>org.gatein.pc</groupId>
-                           <artifactId>pc-api</artifactId>
-                           <version>${gatein.pc.version}</version>
-                        </artifactItem>
-                        <artifactItem>
-                           <groupId>org.gatein.pc</groupId>
-                           <artifactId>pc-portlet</artifactId>
-                           <version>${gatein.pc.version}</version>
-                        </artifactItem>
-                        <!--<artifactItem>
-                           <groupId>org.exoplatform.kernel</groupId>
-                           <artifactId>exo.kernel.container</artifactId>
-                           <version>2.2.2-GA</version>
-                        </artifactItem>
-                        <artifactItem>
-                           <groupId>org.exoplatform.portal</groupId>
-                           <artifactId>exo.portal.webui.portal</artifactId>
-                           <version>3.1.0-GA</version>
-                        </artifactItem>
-                        <artifactItem>
-                           <groupId>picocontainer</groupId>
-                           <artifactId>picocontainer</artifactId>
-                           <version>1.1</version>
-                        </artifactItem>-->
                      </artifactItems>
                      <outputDirectory>${project.build.outputDirectory}/lib</outputDirectory>
                   </configuration>

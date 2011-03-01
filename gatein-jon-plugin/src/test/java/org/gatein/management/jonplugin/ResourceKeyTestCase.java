@@ -33,7 +33,7 @@ public class ResourceKeyTestCase extends TestCase
 {
    public void testRoundtripParsing()
    {
-      Portal.PortalKey portalKey = new Portal.PortalKey("container", "portal");
+      Portal.PortalKey portalKey = Portal.PortalKey.create("container", "portal");
       ResourceKey key = new ResourceKey(portalKey, "invoker", "portlet");
       ResourceKey parsed = ResourceKey.parse(ResourceKey.asString(key));
       assertEquals(key, parsed);
@@ -59,7 +59,7 @@ public class ResourceKeyTestCase extends TestCase
 
    public void testGetChildFor()
    {
-      Portal.PortalKey portalKey = new Portal.PortalKey("container", "portal");
+      Portal.PortalKey portalKey = Portal.PortalKey.create("container", "portal");
 
       ResourceKey key = new ResourceKey(portalKey, null, null);
       ResourceKey child = ResourceKey.getKeyForChild(key, "invoker");
@@ -111,7 +111,7 @@ public class ResourceKeyTestCase extends TestCase
    {
       try
       {
-         ResourceKey.getKeyForChild(new ResourceKey(new Portal.PortalKey("container", "portal"), null, null), null);
+         ResourceKey.getKeyForChild(new ResourceKey(Portal.PortalKey.create("container", "portal"), null, null), null);
          fail("should fail on null");
       }
       catch (IllegalArgumentException e)

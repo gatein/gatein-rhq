@@ -42,7 +42,7 @@ class ResourceKey
       this.portalKey = portalKey;
 
       // only take portlet id into account if invoker id is not null or empty
-      if(!ParameterValidation.isNullOrEmpty(invokerId))
+      if (!ParameterValidation.isNullOrEmpty(invokerId))
       {
          this.invokerId = invokerId;
          this.portletId = portletId;
@@ -50,20 +50,19 @@ class ResourceKey
 
    }
 
-   static String createPortalKeyFrom(Portal.PortalKey key)
-   {
-       return Portal.PortalKey.compose(key);
-   }
-
    static ResourceKey parse(String resourceKey)
    {
       String[] split = resourceKey.split(SEPARATOR);
       switch (split.length)
       {
-         case 1: return new ResourceKey(Portal.PortalKey.parse(split[0]), null, null);
-         case 2: return new ResourceKey(Portal.PortalKey.parse(split[0]), split[1], null);
-         case 3: return new ResourceKey(Portal.PortalKey.parse(split[0]), split[1], split[2]);
-         default: throw new IllegalArgumentException("Invalid ResourceKey: '" + resourceKey + "'");
+         case 1:
+            return new ResourceKey(Portal.PortalKey.parse(split[0]), null, null);
+         case 2:
+            return new ResourceKey(Portal.PortalKey.parse(split[0]), split[1], null);
+         case 3:
+            return new ResourceKey(Portal.PortalKey.parse(split[0]), split[1], split[2]);
+         default:
+            throw new IllegalArgumentException("Invalid ResourceKey: '" + resourceKey + "'");
       }
    }
 
@@ -73,7 +72,7 @@ class ResourceKey
       ParameterValidation.throwIllegalArgExceptionIfNullOrEmpty(childId, "child identifier", null);
 
       String invokerId = parent.getInvokerId();
-      if(invokerId == null)
+      if (invokerId == null)
       {
          return new ResourceKey(parent.getPortalKey(), childId, null);
       }
@@ -85,7 +84,7 @@ class ResourceKey
 
    static String asString(ResourceKey key)
    {
-      return createPortalKeyFrom(key.portalKey) + (key.invokerId != null ? SEPARATOR + key.invokerId + (key.portletId != null ? SEPARATOR + key.portletId : "") : "");
+      return Portal.PortalKey.compose(key.portalKey) + (key.invokerId != null ? SEPARATOR + key.invokerId + (key.portletId != null ? SEPARATOR + key.portletId : "") : "");
    }
 
    static Portal.PortalKey extractPortalKeyFrom(String resourceKey)

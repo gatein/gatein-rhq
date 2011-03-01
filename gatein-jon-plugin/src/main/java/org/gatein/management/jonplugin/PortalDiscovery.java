@@ -24,11 +24,9 @@
 package org.gatein.management.jonplugin;
 
 import org.gatein.management.Portal;
-import org.gatein.management.PortalServer;
-import org.gatein.management.PortalStatisticService;
-import org.gatein.management.jmx.JMXPortalStatisticService;
 import org.mc4j.ems.connection.EmsConnection;
 import org.mc4j.ems.connection.bean.EmsBean;
+import org.rhq.core.domain.configuration.Configuration;
 import org.rhq.core.pluginapi.inventory.DiscoveredResourceDetails;
 import org.rhq.core.pluginapi.inventory.ResourceDiscoveryContext;
 import org.rhq.plugins.jmx.JMXComponent;
@@ -54,21 +52,22 @@ public class PortalDiscovery extends MBeanResourceDiscoveryComponent<JMXComponen
       {
          String resourceKey = resource.getResourceKey();
          EmsBean portalBean = connection.getBean(resourceKey);
-         String portalContainerName = portalBean.getBeanName().getKeyProperty("portal").replace('"', ' ').trim();
+         Configuration configuration = context.getDefaultPluginConfiguration();
+         String portalContainerName = configuration.get("objectName").getConfiguration().getSimpleValue("container", "portal");
 
          String[] portalNames = (String[])portalBean.getAttribute("PortalList").getValue();
          for (String portalName : portalNames)
          {
-            PortalStatisticService statisticService = new JMXPortalStatisticService(portalBean, portalName);
-            Portal portal = PortalServer.createAndAddPortal(portalContainerName, portalName, statisticService);
-            Portal.PortalKey key = portal.getKey();
-            DiscoveredResourceDetails detail = new DiscoveredResourceDetails(context.getResourceType(), ResourceKey.createPortalKeyFrom(key),
-               key.getPortalName(), "version", "Monitoring of GateIn resources", null, null);
+            Portal.PortalKey key = Portal.PortalKey.create(portalContainerName, portalName);
+            DiscoveredResourceDetails detail = new DiscoveredResourceDetails(context.getResourceType(), Portal.PortalKey.compose(key),
+               key.getPortalName(), "version", "Monitoring of GateIn resources for portal '" + key.getPortalName()
+                  + "' in container '" + key.getPortalContainerName() + "'", null, null);
 
             resources.add(detail);
             log.info("Discovered new Portal");
          }
 
+         resources.remove(resource);
       }
 
       return resources;

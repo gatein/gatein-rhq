@@ -24,7 +24,7 @@
 
 <plugin name="GateIn"
         displayName="GateIn Plugin"
-        description="Supports monitoring of GateIn 3.1.x and EPP 5.1.x JMX"
+        description="Supports monitoring of GateIn 3.1.x and EPP 5.1.x"
         version="2"
         package="org.gatein.management.jonplugin"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -32,7 +32,7 @@
         xmlns:c="urn:xmlns:rhq-configuration"
         xsi:schemaLocation="urn:xmlns:rhq-plugin http://svn.rhq-project.org/repos/rhq/tags/RHQ_1_3_1_GA/modules/core/client-api/src/main/resources/rhq-plugin.xsd">
 
-   <depends plugin="JMX" />
+   <depends plugin="JMX"/>
    <depends plugin="JBossAS5" useClasses="true"/>
 
    <service name="GateIn Portal" discovery="org.gatein.management.jonplugin.PortalDiscovery"
@@ -43,18 +43,28 @@
       </runs-inside>
 
       <plugin-configuration>
-         <c:simple-property name="objectName" readOnly="true" default="exo:portal=%container%,service=statistic,type=portal,view=portal"/>
+         <c:simple-property name="objectName" readOnly="true"
+                            default='exo:portal=%container%,service=statistic,type=portal,view=portal'/>
       </plugin-configuration>
 
-      <metric property="minExecutionTime" displayName="Minimum execution time in seconds for this portal" units="seconds"/>
-      <metric property="maxExecutionTime" displayName="Maximum execution time in seconds for this portal" units="seconds"/>
-      <metric property="averageExecutionTime" displayName="Average execution time in seconds for this portal" units="seconds"/>
-      <metric property="throughput" displayName="Number of requests per second for this portal" units="none"/>
+      <metric property="minExecutionTime" displayName="Minimum execution time in seconds for this portal"
+              units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+      <metric property="maxExecutionTime" displayName="Maximum execution time in seconds for this portal"
+              units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+      <metric property="averageExecutionTime" displayName="Average execution time in seconds for this portal"
+              units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+      <metric property="throughput" displayName="Number of requests per second for this portal" units="none"
+              displayType="summary" defaultOn="true" measurementType="dynamic"/>
 
-      <service name="Portlet Invoker" class="InvokerComponent" discovery="InvokerDiscovery" description="Monitors PortletInvokers">
+      <!--<service name="Portlet Invoker" class="InvokerComponent" discovery="InvokerDiscovery"
+               description="Monitors PortletInvokers">
          <operation name="refreshPortletList" displayName="Refresh portlet list"
                     description="Refreshes the list of deployed portlets"/>
 
+         <plugin-configuration>
+            <c:simple-property name="objectName" readOnly="true"
+                               default='exo:portal=%container%,service=statistic,type=application,view=portal'/>
+         </plugin-configuration>
 
          <service name="Portlet" class="PortletComponent" discovery="PortletDiscovery" description="Monitors Portlets">
             <metric property="averageRenderTime" displayName="Average render time" units="milliseconds"/>
@@ -70,6 +80,6 @@
             <metric property="actionErrorCount" displayName="Number of action errors" measurementType="trendsup"
                     units="none"/>
          </service>
-      </service>
+      </service>-->
    </service>
 </plugin>

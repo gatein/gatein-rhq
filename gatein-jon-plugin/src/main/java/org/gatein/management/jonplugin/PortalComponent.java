@@ -24,91 +24,76 @@
 package org.gatein.management.jonplugin;
 
 import org.gatein.management.Portal;
-import org.gatein.management.PortalServer;
+import org.gatein.management.PortalStatisticService;
+import org.gatein.management.jmx.JMXPortalStatisticService;
+import org.mc4j.ems.connection.EmsConnection;
+import org.mc4j.ems.connection.bean.EmsBean;
 import org.rhq.core.domain.configuration.Configuration;
+import org.rhq.core.domain.configuration.PropertySimple;
 import org.rhq.core.domain.measurement.AvailabilityType;
 import org.rhq.core.domain.measurement.MeasurementDataNumeric;
 import org.rhq.core.domain.measurement.MeasurementReport;
 import org.rhq.core.domain.measurement.MeasurementScheduleRequest;
-import org.rhq.core.pluginapi.configuration.ConfigurationFacet;
-import org.rhq.core.pluginapi.configuration.ConfigurationUpdateReport;
-import org.rhq.core.pluginapi.event.EventContext;
-import org.rhq.core.pluginapi.inventory.CreateChildResourceFacet;
-import org.rhq.core.pluginapi.inventory.CreateResourceReport;
-import org.rhq.core.pluginapi.inventory.DeleteResourceFacet;
-import org.rhq.core.pluginapi.inventory.InvalidPluginConfigurationException;
-import org.rhq.core.pluginapi.inventory.ResourceComponent;
 import org.rhq.core.pluginapi.inventory.ResourceContext;
 import org.rhq.core.pluginapi.measurement.MeasurementFacet;
-import org.rhq.core.pluginapi.operation.OperationContext;
 import org.rhq.core.pluginapi.operation.OperationFacet;
 import org.rhq.core.pluginapi.operation.OperationResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.rhq.plugins.jmx.JMXComponent;
+import org.rhq.plugins.jmx.MBeanResourceComponent;
 
 import java.util.Set;
 
 
-public class PortalComponent implements ResourceComponent, MeasurementFacet, OperationFacet, ConfigurationFacet,
-   CreateChildResourceFacet, DeleteResourceFacet
+public class PortalComponent extends MBeanResourceComponent<JMXComponent> implements MeasurementFacet, OperationFacet
 {
-   private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-
-   public static final String DUMMY_EVENT = "portal-jopr-pluginDummyEvent"; // Same as in Plugin-Descriptor
-
-   EventContext eventContext;
-
    private Portal portal;
+   private AvailabilityType availability = AvailabilityType.UP;
 
-   /**
-    * Return availability of this resource
-    *
-    * @see org.rhq.core.pluginapi.inventory.ResourceComponent#getAvailability()
-    */
    public AvailabilityType getAvailability()
    {
-      return AvailabilityType.UP;
+      return availability;
    }
 
-
-   /**
-    * Start the resource connection
-    *
-    * @see org.rhq.core.pluginapi.inventory.ResourceComponent#start(org.rhq.core.pluginapi.inventory.ResourceContext)
-    */
-   public void start(ResourceContext context) throws InvalidPluginConfigurationException, Exception
+   public void start(ResourceContext<JMXComponent> context)
    {
+      String resourceKey = context.getResourceKey();
+      try
+      {
+         EmsConnection connection = context.getParentResourceComponent().getEmsConnection();
 
-      Configuration conf = context.getPluginConfiguration();
+         ResourceKey key = ResourceKey.parse(resourceKey);
 
-      portal = PortalServer.getPortalManagement(Portal.PortalKey.parse(context.getResourceKey()));
+         Portal.PortalKey portalKey = key.getPortalKey();
+         String currentPortalName = portalKey.getPortalName();
 
-      /*eventContext = context.getEventContext();
-     PortalEventPoller eventPoller = new PortalEventPoller();
-     eventContext.registerEventPoller(eventPoller, 60);*/
+         PropertySimple objectName = (PropertySimple)context.getPluginConfiguration().get("objectName");
 
+         // configuration variables are not interpolated when retrieved from component for some reason (they are from discovery)
+         // also, exo registered the bean with the container name in quotes so need to add them so that the bean can be found...
+         String beanName = objectName.getStringValue().replace("%container%", "\"" + portalKey.getPortalContainerName() + "\"");
+         EmsBean portalBean = connection.getBean(beanName);
+
+         String[] portalNames = (String[])portalBean.getAttribute("PortalList").getValue();
+         for (String portalName : portalNames)
+         {
+            if (portalName.equals(currentPortalName))
+            {
+               PortalStatisticService statisticService = new JMXPortalStatisticService(portalBean, portalName);
+               portal = new Portal(Portal.PortalKey.create(portalKey.getPortalContainerName(), currentPortalName), statisticService);
+               break;
+            }
+         }
+
+         availability = AvailabilityType.UP;
+      }
+      catch (Exception e)
+      {
+         log.debug("Couldn't start PortalComponent '" + resourceKey + "'", e);
+         availability = AvailabilityType.DOWN;
+      }
    }
 
-
-   /**
-    * Tear down the rescource connection
-    *
-    * @see org.rhq.core.pluginapi.inventory.ResourceComponent#stop()
-    */
-   public void stop()
-   {
-//      eventContext.unregisterEventPoller(DUMMY_EVENT);
-   }
-
-
-   /**
-    * Gather measurement data
-    *
-    * @see org.rhq.core.pluginapi.measurement.MeasurementFacet#getValues(org.rhq.core.domain.measurement.MeasurementReport,
-    *      java.util.Set)
-    */
-   public void getValues(MeasurementReport report, Set<MeasurementScheduleRequest> metrics) throws Exception
+   public void getValues(MeasurementReport report, Set<MeasurementScheduleRequest> metrics)
    {
       for (MeasurementScheduleRequest req : metrics)
       {
@@ -137,20 +122,6 @@ public class PortalComponent implements ResourceComponent, MeasurementFacet, Ope
       }
    }
 
-
-   public void startOperationFacet(OperationContext context)
-   {
-
-   }
-
-
-   /**
-    * Invokes the passed operation on the managed resource
-    *
-    * @param name   Name of the operation
-    * @param params The method parameters
-    * @returns An operation result
-    */
    public OperationResult invokeOperation(String name, Configuration params) throws Exception
    {
       OperationResult res = new OperationResult();
@@ -160,51 +131,5 @@ public class PortalComponent implements ResourceComponent, MeasurementFacet, Ope
       }
       return res;
 
-   }
-
-
-   /**
-    * Load the configuration from a resource into the configuration
-    *
-    * @return The configuration of the resource
-    * @see org.rhq.core.pluginapi.configuration.ConfigurationFacet
-    */
-   public Configuration loadResourceConfiguration()
-   {
-      // TODO supply code to load the configuration from the resource into the plugin
-      return null;
-   }
-
-   /**
-    * Write down the passed configuration into the resource
-    *
-    * @param report The configuration updated by the server
-    * @see org.rhq.core.pluginapi.configuration.ConfigurationFacet
-    */
-   public void updateResourceConfiguration(ConfigurationUpdateReport report)
-   {
-      // TODO supply code to update the passed report into the resource
-   }
-
-   /**
-    * Create a child resource
-    *
-    * @see org.rhq.core.pluginapi.inventory.CreateChildResourceFacet
-    */
-   public CreateResourceReport createResource(CreateResourceReport report)
-   {
-      // TODO supply code to create a child resource
-
-      return null; // TODO change this
-   }
-
-   /**
-    * Delete a child resource
-    *
-    * @see org.rhq.core.pluginapi.inventory.DeleteResourceFacet
-    */
-   public void deleteResource() throws Exception
-   {
-      // TODO supply code to delete a child resource
    }
 }
