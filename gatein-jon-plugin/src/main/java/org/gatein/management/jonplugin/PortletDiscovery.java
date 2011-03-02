@@ -23,33 +23,36 @@
 
 package org.gatein.management.jonplugin;
 
-import org.gatein.management.Portal;
+import org.gatein.management.ResourceKey;
 import org.gatein.management.jmx.GateInJMXResourceDiscovery;
 import org.rhq.core.pluginapi.inventory.DiscoveredResourceDetails;
 import org.rhq.core.pluginapi.inventory.ResourceDiscoveryContext;
 import org.rhq.plugins.jmx.JMXComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-
-public class PortalDiscovery extends GateInJMXResourceDiscovery
+/**
+ * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>
+ * @version $Revision$
+ */
+public class PortletDiscovery extends GateInJMXResourceDiscovery
 {
-   private static final Logger log = LoggerFactory.getLogger(PortalDiscovery.class);
-
+   @Override
    protected DiscoveredResourceDetails createResourceDetail(ResourceDiscoveryContext<JMXComponent> context, String portalContainerName, String name)
    {
-      Portal.PortalKey key = Portal.PortalKey.create(portalContainerName, name);
+      String parentKey = context.getParentResourceContext().getResourceKey();
+      ResourceKey parent = ResourceKey.parse(parentKey);
 
-      String portalDescription = key.toString();
+      // ideally we would monitor invokers as well
+      ResourceKey invoker = ResourceKey.getKeyForChild(parent, "local");
+      ResourceKey key = ResourceKey.getKeyForChild(invoker, name);
 
-      log.info("Discovered new " + portalDescription);
 
-      return new DiscoveredResourceDetails(context.getResourceType(), Portal.PortalKey.compose(key),
-         key.getPortalName(), "version", "Monitoring of GateIn resources for " + portalDescription, null, null);
+      return new DiscoveredResourceDetails(context.getResourceType(), ResourceKey.asString(key),
+         key.getPortletId(), "version", "Monitoring of GateIn portlet '" + name + "' running in " + key.getPortalKey(), null, null);
    }
 
+   @Override
    public String getAttributeName()
    {
-      return "PortalList";
+      return "ApplicationList";
    }
 }

@@ -27,7 +27,15 @@ package org.gatein.management;
  * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>
  * @version $Revision$
  */
-public interface PortalStatisticService extends TimedStatisticService
+public class Portlet extends ManagedResource<Portlet, PortletStatisticService>
 {
-   double getThroughput();
+   public Portlet(ResourceKey key, PortletStatisticService statisticService)
+   {
+      super(key, statisticService);
+   }
+
+   public long getExecutionCount()
+   {
+      return statisticService.getExecutionCount();
+   }
 }

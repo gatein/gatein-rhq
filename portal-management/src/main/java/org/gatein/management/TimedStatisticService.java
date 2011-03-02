@@ -27,7 +27,13 @@ package org.gatein.management;
  * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>
  * @version $Revision$
  */
-public interface PortalStatisticService extends TimedStatisticService
+public interface TimedStatisticService
 {
-   double getThroughput();
+   String getServiceName();
+
+   double getAverageExecutionTime();
+
+   double getMinExecutionTime();
+
+   double getMaxExecutionTime();
 }

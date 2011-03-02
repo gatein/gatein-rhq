@@ -21,13 +21,29 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.gatein.management;
+package org.gatein.management.jmx;
+
+import org.gatein.management.PortletStatisticService;
+import org.mc4j.ems.connection.bean.EmsBean;
+import org.mc4j.ems.connection.bean.operation.EmsOperation;
 
 /**
  * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>
  * @version $Revision$
  */
-public interface PortalStatisticService extends TimedStatisticService
+public class JMXPortletStatisticService extends JMXTimedStatisticService implements PortletStatisticService
 {
-   double getThroughput();
+   private final EmsOperation getExecutionCount;
+
+   public JMXPortletStatisticService(EmsBean statisticJMXBean, String portletId)
+   {
+      super(statisticJMXBean, portletId);
+      getExecutionCount = statisticJMXBean.getOperation("getExecutionCount");
+   }
+
+   @Override
+   public long getExecutionCount()
+   {
+      return (Long)getExecutionCount.invoke(getServiceName());
+   }
 }

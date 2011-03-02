@@ -23,7 +23,8 @@
 
 package org.gatein.management.jmx;
 
-import org.gatein.management.PortalStatisticService;
+import org.gatein.common.util.ParameterValidation;
+import org.gatein.management.TimedStatisticService;
 import org.mc4j.ems.connection.bean.EmsBean;
 import org.mc4j.ems.connection.bean.operation.EmsOperation;
 
@@ -31,19 +32,46 @@ import org.mc4j.ems.connection.bean.operation.EmsOperation;
  * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>
  * @version $Revision$
  */
-public class JMXPortalStatisticService extends JMXTimedStatisticService implements PortalStatisticService
+public class JMXTimedStatisticService implements TimedStatisticService
 {
-   private final EmsOperation getThroughput;
+   private final EmsOperation getMinTime;
+   private final EmsOperation getMaxTime;
+   private final EmsOperation getAverageTime;
+   private final String serviceName;
 
-   public JMXPortalStatisticService(EmsBean statisticJMXBean, String portalName)
+   public JMXTimedStatisticService(EmsBean statisticJMXBean, String serviceName)
    {
-      super(statisticJMXBean, portalName);
-      getThroughput = statisticJMXBean.getOperation("getThroughput");
+      ParameterValidation.throwIllegalArgExceptionIfNull(statisticJMXBean, "JMX Statistic proxy");
+      ParameterValidation.throwIllegalArgExceptionIfNullOrEmpty(serviceName, "Service name", null);
+
+      getMinTime = statisticJMXBean.getOperation("getMinTime");
+      getMaxTime = statisticJMXBean.getOperation("getMaxTime");
+      getAverageTime = statisticJMXBean.getOperation("getAverageTime");
+
+      this.serviceName = serviceName;
    }
 
    @Override
-   public double getThroughput()
+   public double getMinExecutionTime()
    {
-      return (Double)getThroughput.invoke(getServiceName());
+      return (Double)getMinTime.invoke(serviceName);
+   }
+
+   @Override
+   public double getMaxExecutionTime()
+   {
+      return (Double)getMaxTime.invoke(serviceName);
+   }
+
+   @Override
+   public String getServiceName()
+   {
+      return serviceName;
+   }
+
+   @Override
+   public double getAverageExecutionTime()
+   {
+      return (Double)getAverageTime.invoke(serviceName);
    }
 }

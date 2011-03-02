@@ -1,37 +1,37 @@
 /*
-* JBoss, a division of Red Hat
-* Copyright 2008, Red Hat Middleware, LLC, and individual contributors as indicated
-* by the @authors tag. See the copyright.txt in the distribution for a
-* full listing of individual contributors.
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of
-* the License, or (at your option) any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this software; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ * JBoss, a division of Red Hat
+ * Copyright 2011, Red Hat Middleware, LLC, and individual
+ * contributors as indicated by the @authors tag. See the
+ * copyright.txt in the distribution for a full listing of
+ * individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 
-package org.gatein.management.jonplugin;
+package org.gatein.management;
 
 import org.gatein.common.util.ParameterValidation;
-import org.gatein.management.Portal;
 
 /**
  * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>
  * @version $Revision$
  */
-class ResourceKey
+public class ResourceKey implements Comparable<ResourceKey>
 {
-   private final static String SEPARATOR = "/";
+   private final static String SEPARATOR = "=";
    private Portal.PortalKey portalKey;
    private String invokerId;
    private String portletId;
@@ -50,7 +50,7 @@ class ResourceKey
 
    }
 
-   static ResourceKey parse(String resourceKey)
+   public static ResourceKey parse(String resourceKey)
    {
       String[] split = resourceKey.split(SEPARATOR);
       switch (split.length)
@@ -66,7 +66,7 @@ class ResourceKey
       }
    }
 
-   static ResourceKey getKeyForChild(ResourceKey parent, String childId)
+   public static ResourceKey getKeyForChild(ResourceKey parent, String childId)
    {
       ParameterValidation.throwIllegalArgExceptionIfNull(parent, "Parent resource");
       ParameterValidation.throwIllegalArgExceptionIfNullOrEmpty(childId, "child identifier", null);
@@ -82,12 +82,12 @@ class ResourceKey
       }
    }
 
-   static String asString(ResourceKey key)
+   public static String asString(ResourceKey key)
    {
       return Portal.PortalKey.compose(key.portalKey) + (key.invokerId != null ? SEPARATOR + key.invokerId + (key.portletId != null ? SEPARATOR + key.portletId : "") : "");
    }
 
-   static Portal.PortalKey extractPortalKeyFrom(String resourceKey)
+   public static Portal.PortalKey extractPortalKeyFrom(String resourceKey)
    {
       ParameterValidation.throwIllegalArgExceptionIfNullOrEmpty(resourceKey, "resource key", null);
       return Portal.PortalKey.parse(resourceKey.substring(resourceKey.indexOf(SEPARATOR)));
@@ -151,5 +151,10 @@ class ResourceKey
       result = 31 * result + (invokerId != null ? invokerId.hashCode() : 0);
       result = 31 * result + (portletId != null ? portletId.hashCode() : 0);
       return result;
+   }
+
+   public int compareTo(ResourceKey o)
+   {
+      return ResourceKey.asString(this).compareTo(ResourceKey.asString(o));
    }
 }
