@@ -23,6 +23,8 @@
 
 package org.gatein.management;
 
+import org.gatein.management.spi.stats.PortletStatisticService;
+
 /**
  * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>
  * @version $Revision$

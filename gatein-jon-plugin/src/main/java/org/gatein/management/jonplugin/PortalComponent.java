@@ -24,10 +24,10 @@
 package org.gatein.management.jonplugin;
 
 import org.gatein.management.Portal;
-import org.gatein.management.PortalStatisticService;
 import org.gatein.management.ResourceKey;
 import org.gatein.management.jmx.GateInJMXResourceComponent;
 import org.gatein.management.jmx.JMXPortalStatisticService;
+import org.gatein.management.spi.stats.PortalStatisticService;
 import org.mc4j.ems.connection.bean.EmsBean;
 import org.rhq.core.domain.configuration.Configuration;
 import org.rhq.core.domain.measurement.MeasurementDataNumeric;

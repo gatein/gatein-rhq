@@ -23,6 +23,8 @@
 
 package org.gatein.management;
 
+import org.gatein.management.spi.stats.PortalStatisticService;
+
 /**
  * @author Chris Laprun
  * @version $Revision: 8784 $

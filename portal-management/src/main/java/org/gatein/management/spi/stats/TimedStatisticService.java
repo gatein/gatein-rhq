@@ -21,7 +21,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.gatein.management;
+package org.gatein.management.spi.stats;
 
 /**
  * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>

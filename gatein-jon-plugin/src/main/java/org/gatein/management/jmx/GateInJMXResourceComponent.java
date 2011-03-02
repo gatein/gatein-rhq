@@ -26,7 +26,7 @@ package org.gatein.management.jmx;
 import org.gatein.management.ManagedResource;
 import org.gatein.management.Portal;
 import org.gatein.management.ResourceKey;
-import org.gatein.management.TimedStatisticService;
+import org.gatein.management.spi.stats.TimedStatisticService;
 import org.mc4j.ems.connection.EmsConnection;
 import org.mc4j.ems.connection.bean.EmsBean;
 import org.rhq.core.domain.configuration.PropertySimple;

@@ -34,36 +34,9 @@
    <name>GateIn JON Plugin: Portal Management</name>
 
    <dependencies>
-      <!--<dependency>
-         <groupId>org.jboss.portal.core</groupId>
-         <artifactId>core</artifactId>
-      </dependency>
       <dependency>
-         <groupId>org.jboss.portal.core</groupId>
-         <artifactId>jems</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.portal.core</groupId>
-         <artifactId>server</artifactId>
-      </dependency>-->
-      <dependency>
-         <groupId>org.gatein.pc</groupId>
-         <artifactId>pc-management</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.gatein.pc</groupId>
-         <artifactId>pc-federation</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.jbossas</groupId>
-         <artifactId>jboss-as-j2se</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.portal</groupId>
-         <artifactId>exo.portal.webui.portal</artifactId>
-         <version>3.1.0-GA</version>
-         <scope>provided</scope>
+         <groupId>org.gatein.common</groupId>
+         <artifactId>common-common</artifactId>
       </dependency>
    </dependencies>
 </project>

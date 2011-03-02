@@ -23,7 +23,7 @@
 
 package org.gatein.management.jmx;
 
-import org.gatein.management.PortletStatisticService;
+import org.gatein.management.spi.stats.PortletStatisticService;
 import org.mc4j.ems.connection.bean.EmsBean;
 import org.mc4j.ems.connection.bean.operation.EmsOperation;
 

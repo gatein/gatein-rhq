@@ -40,8 +40,7 @@
    <properties>
       <org.slf4j.version>1.5.6</org.slf4j.version>
       <rhq.version>3.0.1.GA</rhq.version>
-      <gatein.pc.version>2.3.0-Alpha01</gatein.pc.version>
-      <!--<version.jboss>4.2.3.GA</version.jboss>-->
+      <gatein.common.version>2.0.3-GA</gatein.common.version>
    </properties>
 
    <dependencyManagement>
@@ -73,59 +72,15 @@
          </dependency>
          <dependency>
             <groupId>org.rhq</groupId>
-            <artifactId>rhq-core-native-system</artifactId>
+            <artifactId>rhq-jmx-plugin</artifactId>
             <version>${rhq.version}</version>
-            <scope>provided</scope>
-            <exclusions>
-               <exclusion>
-                  <groupId>org.hyperic</groupId>
-                  <artifactId>sigar-dist</artifactId>
-               </exclusion>
-            </exclusions>
          </dependency>
 
-         <!-- add your dependencies here -->
-         <!--<dependency>
-            <groupId>org.jboss.portal.core</groupId>
-            <artifactId>core</artifactId>
-            <version>${version.portal}</version>
-         </dependency>
          <dependency>
-            <groupId>org.jboss.portal.core</groupId>
-            <artifactId>jems</artifactId>
-            <version>${version.portal}</version>
+            <groupId>org.gatein.common</groupId>
+            <artifactId>common-common</artifactId>
+            <version>${gatein.common.version}</version>
          </dependency>
-         <dependency>
-            <groupId>org.jboss.portal.core</groupId>
-            <artifactId>server</artifactId>
-            <version>${version.portal}</version>
-         </dependency>-->
-         <dependency>
-            <groupId>org.gatein.pc</groupId>
-            <artifactId>pc-management</artifactId>
-            <version>${gatein.pc.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.gatein.pc</groupId>
-            <artifactId>pc-federation</artifactId>
-            <version>${gatein.pc.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.jbossas</groupId>
-            <artifactId>jboss-as-j2se</artifactId>
-            <version>5.1.0.GA</version>
-            <scope>provided</scope>
-         </dependency>
-         <!--<dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-system</artifactId>
-            <version>${version.jboss}</version>
-         </dependency>
-         <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-common</artifactId>
-            <version>${version.jboss}</version>
-         </dependency>-->
       </dependencies>
    </dependencyManagement>
 

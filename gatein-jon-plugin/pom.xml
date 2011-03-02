@@ -1,6 +1,6 @@
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~ JBoss, a division of Red Hat                                              ~
-  ~ Copyright 2009, Red Hat Middleware, LLC, and individual
+<!--
+  ~ JBoss, a division of Red Hat
+  ~ Copyright 2011, Red Hat Middleware, LLC, and individual
   ~ contributors as indicated by the @authors tag. See the
   ~ copyright.txt in the distribution for a full listing of
   ~ individual contributors.
@@ -18,8 +18,8 @@
   ~ You should have received a copy of the GNU Lesser General Public
   ~ License along with this software; if not, write to the Free
   ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.                  ~
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+  -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -44,24 +44,13 @@
       </dependency>
       <dependency>
          <groupId>org.rhq</groupId>
-         <artifactId>rhq-core-native-system</artifactId>
+         <artifactId>rhq-jmx-plugin</artifactId>
+         <version>${rhq.version}</version>
       </dependency>
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>
       </dependency>
-      <dependency>
-         <groupId>org.gatein.pc</groupId>
-         <artifactId>pc-management</artifactId>
-      </dependency>
-      <!--<dependency>
-         <groupId>org.jboss.portal.core</groupId>
-         <artifactId>jems</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.portal.core</groupId>
-         <artifactId>server</artifactId>
-      </dependency>-->
       <dependency>
          <groupId>org.gatein.management</groupId>
          <artifactId>portal-management</artifactId>
@@ -85,30 +74,12 @@
          <scope>provided</scope>
          <!-- provided by the agent/plugin-container -->
       </dependency>
+
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <version>4.7</version>
          <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.rhq</groupId>
-         <artifactId>rhq-jmx-plugin</artifactId>
-         <version>${rhq.version}</version>
-      </dependency>
-      <!--<dependency>
-         <groupId>org.exoplatform.portal</groupId>
-         <artifactId>exo.portal.webui.portal</artifactId>
-         <version>3.1.0-GA</version>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.kernel</groupId>
-         <artifactId>exo.kernel.container</artifactId>
-         <version>2.2.2-GA</version>
-      </dependency>-->
-      <dependency>
-         <groupId>org.gatein.pc</groupId>
-         <artifactId>pc-federation</artifactId>
       </dependency>
    </dependencies>
 
@@ -158,7 +129,7 @@
                         <artifactItem>
                            <groupId>org.gatein.common</groupId>
                            <artifactId>common-common</artifactId>
-                           <version>2.0.3-GA</version>
+                           <version>${gatein.common.version}</version>
                         </artifactItem>
                      </artifactItems>
                      <outputDirectory>${project.build.outputDirectory}/lib</outputDirectory>

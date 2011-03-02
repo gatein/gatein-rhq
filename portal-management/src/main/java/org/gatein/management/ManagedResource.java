@@ -24,6 +24,7 @@
 package org.gatein.management;
 
 import org.gatein.common.util.ParameterValidation;
+import org.gatein.management.spi.stats.TimedStatisticService;
 
 /**
  * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>

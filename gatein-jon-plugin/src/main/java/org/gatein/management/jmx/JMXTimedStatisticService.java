@@ -24,7 +24,7 @@
 package org.gatein.management.jmx;
 
 import org.gatein.common.util.ParameterValidation;
-import org.gatein.management.TimedStatisticService;
+import org.gatein.management.spi.stats.TimedStatisticService;
 import org.mc4j.ems.connection.bean.EmsBean;
 import org.mc4j.ems.connection.bean.operation.EmsOperation;
 
