@@ -34,13 +34,14 @@
    <parent>
       <groupId>org.gatein</groupId>
       <artifactId>gatein-parent</artifactId>
-      <version>1.0.2-GA</version>
+      <version>1.1.0-GA</version>
    </parent>
 
    <properties>
       <org.slf4j.version>1.5.6</org.slf4j.version>
-      <rhq.version>3.0.1.GA</rhq.version>
-      <gatein.common.version>2.0.3-GA</gatein.common.version>
+      <rhq.version>4.0.1</rhq.version>
+      <gatein.common.version>2.0.4-GA</gatein.common.version>
+      <junit.version>4.8.1</junit.version>
    </properties>
 
    <dependencyManagement>
@@ -80,6 +81,13 @@
             <groupId>org.gatein.common</groupId>
             <artifactId>common-common</artifactId>
             <version>${gatein.common.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
          </dependency>
       </dependencies>
    </dependencyManagement>

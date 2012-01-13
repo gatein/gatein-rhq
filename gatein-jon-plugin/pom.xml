@@ -78,7 +78,6 @@
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
-         <version>4.7</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
@@ -97,7 +96,7 @@
          <plugin>
             <groupId>org.rhq</groupId>
             <artifactId>rhq-plugin-validator</artifactId>
-            <version>4.0.0.B02</version>
+            <version>${rhq.version}</version>
          </plugin>
 
          <!--
