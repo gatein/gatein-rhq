@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!--
+  ~ JBoss, a division of Red Hat
+  ~ Copyright 2011, Red Hat Middleware, LLC, and individual
+  ~ contributors as indicated by the @authors tag. See the
+  ~ copyright.txt in the distribution for a full listing of
+  ~ individual contributors.
+  ~
+  ~ This is free software; you can redistribute it and/or modify it
+  ~ under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation; either version 2.1 of
+  ~ the License, or (at your option) any later version.
+  ~
+  ~ This software is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public
+  ~ License along with this software; if not, write to the Free
+  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+  -->
+
+<plugin name="GateIn"
+        displayName="GateIn Plugin"
+        description="Supports monitoring of GateIn 3.x and EPP 5.x"
+        version="2"
+        package="org.gatein.rhq.plugins"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:xmlns:rhq-plugin"
+        xmlns:c="urn:xmlns:rhq-configuration"
+        xsi:schemaLocation="
+        urn:xmlns:rhq-plugin http://git.fedorahosted.org/git?p=rhq/rhq.git;a=blob_plain;f=modules/core/client-api/src/main/resources/rhq-plugin.xsd;hb=HEAD
+        urn:xmlns:rhq-configuration http://git.fedorahosted.org/git?p=rhq/rhq.git;a=blob_plain;f=modules/core/client-api/src/main/resources/rhq-configuration.xsd;hb=HEAD
+        ">
+
+   <depends plugin="JMX"/>
+   <depends plugin="JBossAS5" useClasses="true"/>
+
+   <service name="Portal" discovery="PortalDiscovery" class="org.rhq.plugins.jmx.MBeanResourceComponent" description="Monitors Portals">
+
+      <runs-inside>
+         <parent-resource-type name="JBossAS Server" plugin="JBossAS5"/>
+      </runs-inside>
+
+      <plugin-configuration>
+         <c:simple-property name="objectName" readOnly="true" default="exo:portal=%container%,service=statistic,type=portal,view=portal"/>
+         <c:simple-property name="nameTemplate" default="{container}"/>
+         <c:simple-property name="descriptionTemplate" default="Statistics for portal container {container}"/>
+         <c:simple-property name="container" type="string" description="The name of the portal container"/>
+      </plugin-configuration>
+
+      <service name="Site" discovery="StatisticResourceDiscovery"
+            class="StatisticResourceComponent" description="Site Statistics">
+         <plugin-configuration>
+            <c:simple-property name="listAttributeName" readOnly="true" default='PortalList'/>
+         </plugin-configuration>
+
+         <metric property="minTime" displayName="The minimum execution time of a specified portal in seconds"
+                 units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+         <metric property="throughput" displayName="The number of request per second of a specified portal" units="none"
+                 displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+         <metric property="averageTime" displayName="The average execution time of a specified portal in seconds"
+                 units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+         <metric property="executionCount" displayName="The execution count of a specified portal" units="none"
+                 displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+         <metric property="maxTime" displayName="The maximum execution time of a specified portal in seconds"
+                 units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+      </service>
+
+      <service name="Portlet" discovery="StatisticResourceDiscovery" class="StatisticResourceComponent" description="Portlet Statistics">
+         <plugin-configuration>
+            <!-- This will replace the mbean we retrieved from the parent service -->
+            <c:simple-property name="objectName" readOnly="true" default='exo:portal=%container%,service=statistic,type=application,view=portal'/>
+            <c:simple-property name="listAttributeName" readOnly="true" default='ApplicationList'/>
+         </plugin-configuration>
+
+         <metric property="minTime" displayName="The minimum execution time of a specified portlet in seconds"
+                 units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+         <metric property="averageTime" displayName="The average execution time of a specified portlet in seconds"
+                 units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+         <metric property="executionCount" displayName="The execution count of a specified portlet" units="none"
+                 displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+         <metric property="maxTime" displayName="The maximum execution time of a specified portlet in seconds"
+                 units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+      </service>
+
+   </service>
+</plugin>

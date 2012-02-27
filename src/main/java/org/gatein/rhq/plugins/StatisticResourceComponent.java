@@ -1,9 +1,8 @@
 /*
- * JBoss, a division of Red Hat
- * Copyright 2011, Red Hat Middleware, LLC, and individual
- * contributors as indicated by the @authors tag. See the
- * copyright.txt in the distribution for a full listing of
- * individual contributors.
+ * JBoss, Home of Professional Open Source.
+ * Copyright 2012, Red Hat, Inc., and individual contributors
+ * as indicated by the @author tags. See the copyright.txt file in the
+ * distribution for a full listing of individual contributors.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -21,13 +20,18 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.gatein.management.spi.stats;
+package org.gatein.rhq.plugins;
+
+import org.gatein.rhq.plugins.jmx.MBeanAttributeResourceComponent;
 
 /**
- * @author <a href="mailto:chris.laprun@jboss.com">Chris Laprun</a>
- * @version $Revision$
+ * @author <a href="mailto:nscavell@redhat.com">Nick Scavelli</a>
  */
-public interface PortletStatisticService extends TimedStatisticService
+public class StatisticResourceComponent extends MBeanAttributeResourceComponent
 {
-   long getExecutionCount();
+   @Override
+   protected String parseAttributeValue(String resourceKey)
+   {
+      return ResourceKey.from(resourceKey).getResourceName();
+   }
 }

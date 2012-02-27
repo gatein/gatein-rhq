@@ -24,12 +24,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
-   <groupId>org.gatein.management</groupId>
-   <artifactId>jonplugin-parent</artifactId>
-   <packaging>pom</packaging>
-   <name>GateIn JON Plugin Module parent</name>
-   <version>1.0.0-SNAPSHOT</version>
-   <url>http://www.gatein.org/</url>
 
    <parent>
       <groupId>org.gatein</groupId>
@@ -37,63 +31,98 @@
       <version>1.1.0-GA</version>
    </parent>
 
+   <groupId>org.gatein.rhq</groupId>
+   <artifactId>gatein-rhq-plugin</artifactId>
+   <version>1.0.0-SNAPSHOT</version>
+   <packaging>jar</packaging>
+
+   <name>GateIn RHQ Plugin</name>
+   <description>GateIn Portal RHQ Plugin Project</description>
+
+   <scm>
+      <connection>scm:git:git://github.com/gatein/gatein-rhq.git</connection>
+      <developerConnection>scm:git:ssh://git@github.com/gatein/gatein-rhq.git</developerConnection>
+      <url>https://github.com/gatein/gatein-rhq.git</url>
+   </scm>
+
    <properties>
       <org.slf4j.version>1.5.6</org.slf4j.version>
-      <rhq.version>4.0.1</rhq.version>
+      <rhq.version>4.2.0</rhq.version>
       <gatein.common.version>2.0.4-GA</gatein.common.version>
       <junit.version>4.8.1</junit.version>
    </properties>
 
-   <dependencyManagement>
-      <!-- The parent pom manages the inter-dependencies of the modules. -->
-      <dependencies>
-         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.rhq</groupId>
-            <artifactId>rhq-core-domain</artifactId>
-            <version>${rhq.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.rhq</groupId>
-            <artifactId>rhq-core-plugin-api</artifactId>
-            <version>${rhq.version}</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.rhq</groupId>
-            <artifactId>rhq-jmx-plugin</artifactId>
-            <version>${rhq.version}</version>
-         </dependency>
 
-         <dependency>
-            <groupId>org.gatein.common</groupId>
-            <artifactId>common-common</artifactId>
-            <version>${gatein.common.version}</version>
-         </dependency>
+   <dependencies>
+      <!-- RHQ Dependencies -->
+      <dependency>
+         <groupId>org.rhq</groupId>
+         <artifactId>rhq-core-domain</artifactId>
+         <version>${rhq.version}</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.rhq</groupId>
+         <artifactId>rhq-core-plugin-api</artifactId>
+         <version>${rhq.version}</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.rhq</groupId>
+         <artifactId>rhq-jmx-plugin</artifactId>
+         <version>${rhq.version}</version>
+      </dependency>
 
-         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-         </dependency>
-      </dependencies>
-   </dependencyManagement>
+      <!-- won't compile otherwise due to reliance of JOPR plugin API on hibernate/JPA annotations -->
+      <!-- Fix for the Javac bug requiring annotations to be available when compiling classes. (fixed in JDK 6) -->
+      <dependency>
+         <groupId>javax.persistence</groupId>
+         <artifactId>persistence-api</artifactId>
+         <version>1.0</version>
+         <scope>provided</scope>
+         <!-- provided by the agent/plugin-container -->
+      </dependency>
+      <!-- Fix for the Javac bug requiring annotations to be available when compiling classes. (fixed in JDK 6) -->
+      <dependency>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-annotations</artifactId>
+         <version>3.3.1.GA</version>
+         <scope>provided</scope>
+         <!-- provided by the agent/plugin-container -->
+      </dependency>
 
-   <modules>
-      <module>portal-management</module>
-      <module>gatein-jon-plugin</module>
-   </modules>
+      <dependency>
+         <groupId>commons-logging</groupId>
+         <artifactId>commons-logging</artifactId>
+         <version>1.1</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- Testing -->
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>${junit.version}</version>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <finalName>gatien-rhq-plugin</finalName>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+               <source>1.6</source>
+               <target>1.6</target>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.rhq</groupId>
+            <artifactId>rhq-plugin-validator</artifactId>
+            <version>${rhq.version}</version>
+         </plugin>
+      </plugins>
+   </build>
 </project>
