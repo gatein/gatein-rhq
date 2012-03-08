@@ -79,7 +79,7 @@ public abstract class MBeanAttributeDiscoveryComponent implements ResourceDiscov
          String[] values = (String[]) object;
          if (trace)
          {
-            log.trace("Found " + values.length + " values for attribute " + values.length);
+            log.trace("Found " + values.length + " values for attribute " + attribute.getName());
          }
          Set<DiscoveredResourceDetails> details = new HashSet<DiscoveredResourceDetails>(values.length);
          for (String value : values)
