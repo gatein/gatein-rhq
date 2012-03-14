@@ -33,7 +33,9 @@ import org.rhq.core.pluginapi.inventory.ResourceDiscoveryComponent;
 import org.rhq.core.pluginapi.inventory.ResourceDiscoveryContext;
 import org.rhq.plugins.jmx.MBeanResourceComponent;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -68,7 +70,7 @@ public abstract class MBeanAttributeDiscoveryComponent implements ResourceDiscov
       if (trace) log.trace("Using JMX bean " + bean.getBeanName() + " for this discovery component");
 
       // Get attribute that returns a list of values ot be discovered.
-      EmsAttribute attribute = bean.getAttribute(listAttributeName);
+      EmsAttribute attribute = getAttribute(bean, listAttributeName);
       if (attribute == null) throw new Exception("Unknown attribute '" + listAttributeName + "' for JMX bean " + bean.getBeanName());
       if (trace) log.trace("Looking up list of values for attribute " + attribute.getName());
 
@@ -99,13 +101,24 @@ public abstract class MBeanAttributeDiscoveryComponent implements ResourceDiscov
       }
    }
 
+   private EmsAttribute getAttribute(EmsBean bean, String attributeName)
+   {
+      List<EmsAttribute> attributes = bean.refreshAttributes(Collections.singletonList(attributeName));
+      for (EmsAttribute attribute : attributes)
+      {
+         if (attributeName.equals(attribute.getName())) return attribute;
+      }
+      
+      return null;
+   }
+
    /**
     * Create DiscoveredResourceDetails based on values found during invocation of the 'listAttributeName' attribute of the
     * JMX bean.
     *
     * @param context the {@link ResourceDiscoveryContext} of the discovery request
     * @param attributeValue a value
-    * @return
+    * @return a {@link DiscoveredResourceDetails} that was discovered and can be imported/merged into inventory
     */
    protected abstract DiscoveredResourceDetails createResourceDetails(ResourceDiscoveryContext<MBeanResourceComponent<?>> context, String attributeValue);
 }
