@@ -22,29 +22,40 @@
 
 package org.gatein.rhq.plugins;
 
-import org.gatein.rhq.plugins.jmx.MBeanAttributeDiscoveryComponent;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.rhq.core.pluginapi.inventory.DiscoveredResourceDetails;
 import org.rhq.core.pluginapi.inventory.ResourceDiscoveryContext;
-import org.rhq.plugins.jmx.MBeanResourceComponent;
+import org.rhq.modules.plugins.jbossas7.BaseComponent;
+import org.rhq.modules.plugins.jbossas7.SubsystemDiscovery;
+
+import java.util.Set;
 
 /**
+ * Stub class unless we want some special logic. Provides some trace logging for troubleshooting.
+ *
  * @author <a href="mailto:nscavell@redhat.com">Nick Scavelli</a>
  */
-public class StatisticResourceDiscovery extends MBeanAttributeDiscoveryComponent
+public class PortalSubsystemDiscovery extends SubsystemDiscovery
 {
+   private static final Log log = LogFactory.getLog("org.gatein.rhq.plugins");
    @Override
-   protected DiscoveredResourceDetails createResourceDetails(ResourceDiscoveryContext<MBeanResourceComponent<?>> context, String attributeValue)
+   public Set<DiscoveredResourceDetails> discoverResources(ResourceDiscoveryContext<BaseComponent<?>> context) throws Exception
    {
-      String portalContainerName = context.getParentResourceContext().getResourceKey();
-      ResourceKey resourceKey = ResourceKey.create(portalContainerName, attributeValue);
+      if (log.isTraceEnabled())
+      {
+         log.trace("Discovering resources for GateIn plugin...");
+      }
 
-      return new DiscoveredResourceDetails(
-         context.getResourceType(), 
-         resourceKey.toString(),
-         attributeValue,
-         context.getParentResourceContext().getVersion(),
-         resourceKey.getDescription(),
-         context.getDefaultPluginConfiguration(),
-         context.getParentResourceContext().getNativeProcess());
+      Set<DiscoveredResourceDetails> details = super.discoverResources(context);
+      if (log.isTraceEnabled())
+      {
+         for (DiscoveredResourceDetails detail : details)
+         {
+            log.trace("Successfully discovered resource: " + detail.getResourceKey());
+         }
+      }
+
+      return details;
    }
 }

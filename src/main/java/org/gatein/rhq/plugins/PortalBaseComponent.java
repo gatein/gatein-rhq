@@ -22,32 +22,14 @@
 
 package org.gatein.rhq.plugins;
 
-import org.rhq.core.domain.configuration.Configuration;
-import org.rhq.core.domain.resource.ResourceType;
-import org.rhq.core.pluginapi.inventory.DiscoveredResourceDetails;
-import org.rhq.plugins.jmx.JMXComponent;
-import org.rhq.plugins.jmx.MBeanResourceDiscoveryComponent;
-
-import java.util.Set;
+import org.rhq.core.pluginapi.inventory.ResourceComponent;
+import org.rhq.modules.plugins.jbossas7.BaseComponent;
 
 /**
+ * Stub class in case we want any special logic.
+ *
  * @author <a href="mailto:nscavell@redhat.com">Nick Scavelli</a>
  */
-public class PortalDiscovery extends MBeanResourceDiscoveryComponent<JMXComponent<?>>
+public class PortalBaseComponent<T extends ResourceComponent<?>> extends BaseComponent<T>
 {
-   @Override
-   public Set<DiscoveredResourceDetails> performDiscovery(Configuration pluginConfiguration, JMXComponent parentResourceComponent, ResourceType resourceType, boolean skipUnknownProps)
-   {
-      Set<DiscoveredResourceDetails> details = super.performDiscovery(pluginConfiguration, parentResourceComponent, resourceType, skipUnknownProps);
-      for (DiscoveredResourceDetails detail : details)
-      {
-         // Replace quotes since eXo adds them around the portal container in the JMX object name.
-         String container = detail.getResourceName().replaceAll("\"", "");
-
-         detail.setResourceName(container);
-         detail.setResourceKey(container);
-      }
-
-      return details;
-   }
 }
