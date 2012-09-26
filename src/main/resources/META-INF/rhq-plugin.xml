@@ -37,7 +37,7 @@
 
    <depends plugin="JBossAS7" useClasses="true"/>
 
-   <service name="GateIn" discovery="PortalSubsystemDiscovery" class="PortalBaseComponent">
+   <service name="GateIn" discovery="PortalSubsystemDiscovery" class="PortalBaseComponent" singleton="true" description="GateIn Portal">
       <runs-inside>
          <parent-resource-type name="Profile" plugin="JBossAS7"/>
          <parent-resource-type name="JBossAS7 Standalone Server" plugin="JBossAS7"/>
@@ -58,20 +58,20 @@
                <c:simple-property name="path" readOnly="true" default="site"/>
             </plugin-configuration>
 
-            <metric property="maxTime" displayName="The maximum execution time for a specific site (in seconds)"
-                    units="seconds" displayType="summary" defaultOn="true" measurementType="trendsup"/>
-
-            <metric property="minTime" displayName="The minimum execution time for a specific site (in seconds)"
-                    units="seconds" displayType="summary" defaultOn="true" measurementType="trendsdown"/>
-
-            <metric property="averageTime" displayName="The average execution time for a specific site (in seconds)"
+            <metric property="maxTime" displayName="The maximum execution time for a specific site"
                     units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
 
-            <metric property="executionCount" displayName="The execution count for a specific site" units="none"
-                    displayType="summary" defaultOn="true" measurementType="trendsup"/>
+            <metric property="minTime" displayName="The minimum execution time for a specific site"
+                    units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
 
-            <metric property="throughput" displayName="The number of requests per second for a specific site" units="none"
-                    displayType="summary" defaultOn="true" measurementType="dynamic"/>
+            <metric property="averageTime" displayName="The average execution time for a specific site"
+                    units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+            <metric property="executionCount" displayName="The execution count for a specific site"
+                    units="none" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+            <metric property="throughput" displayName="The number of requests per second for a specific site"
+                    units="none" displayType="summary" defaultOn="true" measurementType="dynamic"/>
          </service>
 
          <service name="Application" discovery="PortalSubsystemDiscovery" class="PortalBaseComponent" description="Managed Application Resources">
@@ -79,17 +79,17 @@
                <c:simple-property name="path" readOnly="true" default="application"/>
             </plugin-configuration>
 
-            <metric property="maxTime" displayName="The maximum execution time for a specific application (in seconds)"
-                    units="seconds" displayType="summary" defaultOn="true" measurementType="trendsup"/>
-
-            <metric property="minTime" displayName="The minimum execution time for a specific application (in seconds)"
-                    units="seconds" displayType="summary" defaultOn="true" measurementType="trendsdown"/>
-
-            <metric property="averageTime" displayName="The average execution time for a specific application (in seconds)"
+            <metric property="maxTime" displayName="The maximum execution time for a specific application"
                     units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
 
-            <metric property="executionCount" displayName="The execution count for a specific application" units="none"
-                    displayType="summary" defaultOn="true" measurementType="trendsup"/>
+            <metric property="minTime" displayName="The minimum execution time for a specific application"
+                    units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+            <metric property="averageTime" displayName="The average execution time for a specific application"
+                    units="seconds" displayType="summary" defaultOn="true" measurementType="dynamic"/>
+
+            <metric property="executionCount" displayName="The execution count for a specific application"
+                    units="none" displayType="summary" defaultOn="true" measurementType="dynamic"/>
          </service>
       </service>
    </service>
