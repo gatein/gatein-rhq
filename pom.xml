@@ -27,12 +27,12 @@
    <parent>
       <groupId>org.gatein</groupId>
       <artifactId>gatein-parent</artifactId>
-      <version>1.1.0-GA</version>
+      <version>1.2.0.Beta01</version>
    </parent>
 
    <groupId>org.gatein.rhq</groupId>
    <artifactId>gatein-as7-rhq-plugin</artifactId>
-   <version>1.0.1-SNAPSHOT</version>
+   <version>1.0.0.Beta01-SNAPSHOT</version>
    <packaging>jar</packaging>
 
    <name>GateIn AS7 RHQ Plugin</name>
@@ -47,7 +47,7 @@
    <properties>
       <org.slf4j.version>1.5.6</org.slf4j.version>
       <rhq.version>4.4.0</rhq.version>
-      <gatein.common.version>2.0.4-GA</gatein.common.version>
+      <gatein.common.version>2.1.0.Beta01</gatein.common.version>
       <junit.version>4.8.1</junit.version>
    </properties>
 
