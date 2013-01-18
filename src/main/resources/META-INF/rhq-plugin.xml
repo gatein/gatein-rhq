@@ -24,7 +24,7 @@
 
 <plugin name="GateIn AS7"
         displayName="GateIn AS7 Plugin"
-        description="Supports monitoring of GateIn 3.5.x (on AS7) and EPP 6.x"
+        description="Supports monitoring of GateIn 3.5.x (on AS7) and JPP 6.x"
         version="2"
         package="org.gatein.rhq.plugins"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
