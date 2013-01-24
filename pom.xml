@@ -32,7 +32,7 @@
 
    <groupId>org.gatein.rhq</groupId>
    <artifactId>gatein-as7-rhq-plugin</artifactId>
-   <version>1.0.1.CR01-SNAPSHOT</version>
+   <version>1.0.1.Final</version>
    <packaging>jar</packaging>
 
    <name>GateIn AS7 RHQ Plugin</name>
