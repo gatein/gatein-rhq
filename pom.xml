@@ -59,6 +59,15 @@
          <artifactId>rhq-core-domain</artifactId>
          <version>${rhq.version}</version>
          <scope>provided</scope>
+        <exclusions>
+          <!-- For some reason hibernate:hibernate3:3.2.r14201-2 is a dependency
+          and since that is only available in deprecated jboss repo, excluding
+          it so we can build w/out it -->
+          <exclusion>
+            <groupId>hibernate</groupId>
+            <artifactId>hibernate3</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
          <groupId>org.rhq</groupId>
