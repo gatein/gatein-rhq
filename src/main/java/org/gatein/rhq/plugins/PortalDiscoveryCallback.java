@@ -16,13 +16,13 @@ public class PortalDiscoveryCallback implements ResourceDiscoveryCallback
    @Override
    public DiscoveryCallbackResults discoveredResources(DiscoveredResourceDetails discoveredResourceDetails) throws Exception
    {
-      log.info("Resource Details:\n" + discoveredResourceDetails);
-
       String version = discoveredResourceDetails.getResourceVersion();
-      if (version.contains("6.1.1")) {
-         discoveredResourceDetails.setResourceName("Portal");
+      if (version.contains("6.1.1"))
+      {
+         discoveredResourceDetails.getPluginConfiguration().setSimpleValue("expectedRuntimeProductName", "Portal");
+         return DiscoveryCallbackResults.PROCESSED;
+      } else {
+         return DiscoveryCallbackResults.UNPROCESSED;
       }
-
-      return DiscoveryCallbackResults.PROCESSED;
    }
 }
