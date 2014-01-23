@@ -38,7 +38,7 @@
    <depends plugin="JBossAS7" useClasses="true"/>
 
    <discovery-callbacks>
-      <type-callback plugin="JBossAS7" type="JBossAS7 Standalone Server" callbackClass="ProductNameDiscoverCallback" />
+      <type-callback plugin="JBossAS7" type="JBossAS7 Standalone Server" callbackClass="PortalDiscoveryCallback" />
    </discovery-callbacks>
 
    <service name="GateIn" discovery="PortalSubsystemDiscovery" class="PortalBaseComponent" singleton="true" description="GateIn Portal">
