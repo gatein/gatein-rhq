@@ -46,7 +46,7 @@
 
    <properties>
       <org.slf4j.version>1.5.6</org.slf4j.version>
-      <rhq.version>4.4.0</rhq.version>
+      <rhq.version>4.9.0</rhq.version>
       <gatein.common.version>2.1.1.Final</gatein.common.version>
       <junit.version>4.8.1</junit.version>
    </properties>
@@ -146,4 +146,12 @@
          </plugin>
       </plugins>
    </build>
+
+    <!-- Apparently we need this !?!? -->
+    <repositories>
+        <repository>
+            <id>java.net</id>
+            <url>http://download.java.net/maven/2/</url>
+        </repository>
+    </repositories>
 </project>

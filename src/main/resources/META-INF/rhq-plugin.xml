@@ -31,11 +31,15 @@
         xmlns="urn:xmlns:rhq-plugin"
         xmlns:c="urn:xmlns:rhq-configuration"
         xsi:schemaLocation="
-        urn:xmlns:rhq-plugin http://git.fedorahosted.org/git?p=rhq/rhq.git;a=blob_plain;f=modules/core/client-api/src/main/resources/rhq-plugin.xsd;hb=HEAD
-        urn:xmlns:rhq-configuration http://git.fedorahosted.org/git?p=rhq/rhq.git;a=blob_plain;f=modules/core/client-api/src/main/resources/rhq-configuration.xsd;hb=HEAD
+        urn:xmlns:rhq-plugin https://git.fedorahosted.org/cgit/rhq/rhq.git/plain/modules/core/client-api/src/main/resources/rhq-plugin.xsd?h=release-4.9.0
+        urn:xmlns:rhq-configuration https://git.fedorahosted.org/cgit/rhq/rhq.git/plain/modules/core/client-api/src/main/resources/rhq-configuration.xsd?h=release-4.9.0
         ">
 
    <depends plugin="JBossAS7" useClasses="true"/>
+
+   <discovery-callbacks>
+      <type-callback plugin="JBossAS7" type="JBossAS7 Standalone Server" callbackClass="ProductNameDiscoverCallback" />
+   </discovery-callbacks>
 
    <service name="GateIn" discovery="PortalSubsystemDiscovery" class="PortalBaseComponent" singleton="true" description="GateIn Portal">
       <runs-inside>
