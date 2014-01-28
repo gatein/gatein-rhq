@@ -39,6 +39,7 @@ public class PortalDiscoveryCallback implements ResourceDiscoveryCallback
 
       boolean trace = log.isTraceEnabled();
       String version = discoveredResourceDetails.getResourceVersion();
+      String name = discoveredResourceDetails.getResourceName();
       for (String v : productNameMap.keySet())
       {
          if (version.contains(v))
@@ -47,7 +48,7 @@ public class PortalDiscoveryCallback implements ResourceDiscoveryCallback
             if (trace)
             {
                String before = discoveredResourceDetails.getPluginConfiguration().getSimpleValue(CONFIG_PRODUCT_NAME);
-               log.trace("Modifying " + CONFIG_PRODUCT_NAME + " for version " + version + ", from " + before + " to " + productName);
+               log.trace("Modifying " + CONFIG_PRODUCT_NAME + " for resource [Name=" + name + ", Version=" + version + "] from '" + before + "' to '" + productName + "'");
             }
             discoveredResourceDetails.getPluginConfiguration().setSimpleValue(CONFIG_PRODUCT_NAME, productName);
             result = DiscoveryCallbackResults.PROCESSED;
@@ -60,6 +61,6 @@ public class PortalDiscoveryCallback implements ResourceDiscoveryCallback
    // This isn't quite the best way to know it's a portal server, as we are relying on the JPP string
    private boolean isPortalServer(DiscoveredResourceDetails details)
    {
-      return details.getResourceType().getName().contains("JPP") && details.getResourceVersion().contains("JPP");
+      return details.getResourceName().startsWith("JPP");
    }
 }
