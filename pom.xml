@@ -32,7 +32,7 @@
 
    <groupId>org.gatein.rhq</groupId>
    <artifactId>gatein-as7-rhq-plugin</artifactId>
-   <version>1.1.1.Final-SNAPSHOT</version>
+   <version>1.1.1.Final</version>
    <packaging>jar</packaging>
 
    <name>GateIn AS7 RHQ Plugin</name>
@@ -42,7 +42,7 @@
       <connection>scm:git:git://github.com/gatein/gatein-rhq.git</connection>
       <developerConnection>scm:git:ssh://git@github.com/gatein/gatein-rhq.git</developerConnection>
       <url>https://github.com/gatein/gatein-rhq.git</url>
-     <tag>HEAD</tag>
+     <tag>1.1.1.Final</tag>
   </scm>
 
    <properties>
