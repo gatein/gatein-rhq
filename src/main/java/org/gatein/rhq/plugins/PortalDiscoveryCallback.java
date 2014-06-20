@@ -17,16 +17,7 @@ public class PortalDiscoveryCallback implements ResourceDiscoveryCallback
    private static final Log log = LogFactory.getLog("org.gatein.rhq.plugins");
 
    private static final String CONFIG_PRODUCT_NAME = "expectedRuntimeProductName";
-
-   private static final Map<String, String> productNameMap;
-
-   static
-   {
-      Map<String, String> map = new HashMap<String, String>();
-      map.put("6.1.1", "Portal");
-
-      productNameMap = map;
-   }
+   private static final String PRODUCT_NAME = "Portal";
 
    @Override
    public DiscoveryCallbackResults discoveredResources(DiscoveredResourceDetails discoveredResourceDetails) throws Exception
@@ -40,19 +31,26 @@ public class PortalDiscoveryCallback implements ResourceDiscoveryCallback
       boolean trace = log.isTraceEnabled();
       String version = discoveredResourceDetails.getResourceVersion();
       String name = discoveredResourceDetails.getResourceName();
-      for (String v : productNameMap.keySet())
+
+      // small hack: we check if the version is higher than 6.1.1, as the logic is the same for all known subsequent versions
+      // first, we discard everything after the last dot, as it's usually the release-level string (GA, ER1, ER2, CR1...)
+      // then, we get only the numeric chars, and the resulting should be a string with length of 3
+      String cleanedVersion = version.substring(0, version.lastIndexOf(".")).replaceAll("[^\\d]", "");
+      if (null == cleanedVersion || cleanedVersion.length() > 3)
       {
-         if (version.contains(v))
+         throw new IllegalArgumentException("Couldn't reliably determine the Portal version for '" + version + "'");
+      }
+
+      int versionAsInteger = Integer.parseInt(cleanedVersion);
+      if (versionAsInteger >= 611)
+      {
+         if (trace)
          {
-            String productName = productNameMap.get(v);
-            if (trace)
-            {
-               String before = discoveredResourceDetails.getPluginConfiguration().getSimpleValue(CONFIG_PRODUCT_NAME);
-               log.trace("Modifying " + CONFIG_PRODUCT_NAME + " for resource [Name=" + name + ", Version=" + version + "] from '" + before + "' to '" + productName + "'");
-            }
-            discoveredResourceDetails.getPluginConfiguration().setSimpleValue(CONFIG_PRODUCT_NAME, productName);
-            result = DiscoveryCallbackResults.PROCESSED;
+            String before = discoveredResourceDetails.getPluginConfiguration().getSimpleValue(CONFIG_PRODUCT_NAME);
+            log.trace("Modifying " + CONFIG_PRODUCT_NAME + " for resource [Name=" + name + ", Version=" + version + "] from '" + before + "' to '" + PRODUCT_NAME + "'");
          }
+         discoveredResourceDetails.getPluginConfiguration().setSimpleValue(CONFIG_PRODUCT_NAME, PRODUCT_NAME);
+         result = DiscoveryCallbackResults.PROCESSED;
       }
 
       return result;
