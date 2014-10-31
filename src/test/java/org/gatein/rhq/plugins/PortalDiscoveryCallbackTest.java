@@ -33,6 +33,20 @@ public class PortalDiscoveryCallbackTest
       Configuration configuration = new Configuration();
       ResourceType type = new ResourceType();
 
+      DiscoveredResourceDetails details = new DiscoveredResourceDetails(type, "bogus", "JPP Something", "6.1.1", "", configuration, null);
+      ResourceDiscoveryCallback.DiscoveryCallbackResults results = new PortalDiscoveryCallback().discoveredResources(details);
+
+      assertEquals(ResourceDiscoveryCallback.DiscoveryCallbackResults.PROCESSED, results);
+      assertEquals("Portal", details.getPluginConfiguration().getSimpleValue("expectedRuntimeProductName"));
+   }
+
+
+   @Test
+   public void testVersionIs611GA() throws Exception
+   {
+      Configuration configuration = new Configuration();
+      ResourceType type = new ResourceType();
+
       DiscoveredResourceDetails details = new DiscoveredResourceDetails(type, "bogus", "JPP Something", "6.1.1.GA", "", configuration, null);
       ResourceDiscoveryCallback.DiscoveryCallbackResults results = new PortalDiscoveryCallback().discoveredResources(details);
 
@@ -41,7 +55,7 @@ public class PortalDiscoveryCallbackTest
    }
 
    @Test
-   public void testVersionHigherThan611() throws Exception
+   public void test620ER3HigherThan611() throws Exception
    {
       Configuration configuration = new Configuration();
       ResourceType type = new ResourceType();
@@ -53,13 +67,36 @@ public class PortalDiscoveryCallbackTest
       assertEquals("Portal", details.getPluginConfiguration().getSimpleValue("expectedRuntimeProductName"));
    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void testFailOnUnknownVersion() throws Exception
+   @Test
+   public void test620HigherThan611() throws Exception
    {
       Configuration configuration = new Configuration();
       ResourceType type = new ResourceType();
 
-      DiscoveredResourceDetails details = new DiscoveredResourceDetails(type, "bogus", "JPP Something", "6.22.0.ER3", "", configuration, null);
+      DiscoveredResourceDetails details = new DiscoveredResourceDetails(type, "bogus", "JPP Something", "6.2.0", "", configuration, null);
+      ResourceDiscoveryCallback.DiscoveryCallbackResults results = new PortalDiscoveryCallback().discoveredResources(details);
+
+      assertEquals(ResourceDiscoveryCallback.DiscoveryCallbackResults.PROCESSED, results);
+      assertEquals("Portal", details.getPluginConfiguration().getSimpleValue("expectedRuntimeProductName"));
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public void testFailOnMalformedVersion() throws Exception
+   {
+      Configuration configuration = new Configuration();
+      ResourceType type = new ResourceType();
+
+      DiscoveredResourceDetails details = new DiscoveredResourceDetails(type, "bogus", "JPP Something", "6.-2.0.ER3", "", configuration, null);
+      new PortalDiscoveryCallback().discoveredResources(details);
+   }
+
+   @Test(expected = NumberFormatException.class)
+   public void testFailOnMalformedVersion2() throws Exception
+   {
+      Configuration configuration = new Configuration();
+      ResourceType type = new ResourceType();
+
+      DiscoveredResourceDetails details = new DiscoveredResourceDetails(type, "bogus", "JPP Something", "6.1.GA", "", configuration, null);
       new PortalDiscoveryCallback().discoveredResources(details);
    }
 
