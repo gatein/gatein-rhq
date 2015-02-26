@@ -17,6 +17,19 @@ public class PortalDiscoveryCallback implements ResourceDiscoveryCallback
    private static final String PRODUCT_NAME = "Portal";
    private static final String VERSION_RENAMED_TO_JBOSS_Portal = "6.1.1.GA";
 
+   /**
+    * If {@code version} contains space, returns the token after the last space; otherwise returns {@code version}
+    *
+    * @param version the version string possibly containing an unimportant prefix.
+    * @return the token after the last space or {@code version} itself
+    */
+   static String cleanVersion(String version)
+   {
+      int lastSpace = version.lastIndexOf(' ');
+      String result = lastSpace >= 0 ? version.substring(lastSpace + 1) : version;
+      return result;
+   }
+
    @Override
    public DiscoveryCallbackResults discoveredResources(DiscoveredResourceDetails discoveredResourceDetails) throws Exception
    {
@@ -30,7 +43,9 @@ public class PortalDiscoveryCallback implements ResourceDiscoveryCallback
       String version = discoveredResourceDetails.getResourceVersion();
       String name = discoveredResourceDetails.getResourceName();
 
-      if (VersionComparator.instance().compare(VERSION_RENAMED_TO_JBOSS_Portal, version) <= 0) {
+      /* version may contain something like "JPP 6.2.0.ER8" */
+      String cleanVersion = cleanVersion(version);
+      if (VersionComparator.instance().compare(VERSION_RENAMED_TO_JBOSS_Portal, cleanVersion) <= 0) {
          if (trace)
          {
             String before = discoveredResourceDetails.getPluginConfiguration().getSimpleValue(CONFIG_PRODUCT_NAME);

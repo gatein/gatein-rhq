@@ -15,6 +15,13 @@ import static org.junit.Assert.assertNull;
 public class PortalDiscoveryCallbackTest
 {
    @Test
+   public void testCleanVersion() {
+      assertEquals("6.2.0.ER8", PortalDiscoveryCallback.cleanVersion("JPP 6.2.0.ER8"));
+      assertEquals("6.2.0.ER8", PortalDiscoveryCallback.cleanVersion("JPP bla 6.2.0.ER8"));
+      assertEquals("6.2.0.ER8", PortalDiscoveryCallback.cleanVersion("6.2.0.ER8"));
+   }
+
+   @Test
    public void testVersionLowerThan611() throws Exception
    {
       Configuration configuration = new Configuration();
