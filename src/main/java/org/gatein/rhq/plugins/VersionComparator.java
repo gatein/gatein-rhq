@@ -127,7 +127,7 @@ public class VersionComparator implements Comparator<String>
       VersionTokenizer t2 = new VersionTokenizer(version2, MAJOR_MINOR_MICRO);
       for (int i = 0; i < MAJOR_MINOR_MICRO; i++)
       {
-         int compare = Integer.compare(t1.nextInt(), t2.nextInt());
+         int compare = Integer.valueOf(t1.nextInt()).compareTo(Integer.valueOf(t2.nextInt()));
          if (compare != 0)
          {
             return compare;
